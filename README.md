@@ -9,15 +9,9 @@ When viewing a pull request, simply click the brain icon in the URL bar.
 <img src="screenshots/brain-icon-screenshot.png"/>
 
 
-Positive comments will be highlighted in green.
+Comments will be annotated with their positivity score.
 -----------------------------------------------
-<img src="screenshots/positive-comment.png" />
-
-Negative comments will be highlighted in pink.
------------------------------------------------
-<img src="screenshots/negative-comment.png" />
-
-(Neutral comments will be highlighted in gray.)
+<img src="screenshots/comment.png" />
 
 Setup
 -----
