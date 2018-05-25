@@ -27,7 +27,6 @@ class Plugin {
         this.sendMessageToCurrentTab({start: 1})
           .then((resp) => {
             console.log("bg page has comments", resp.response);
-            console.log("calling POST?");
             var documents = resp.response.map((comment, idx) => {
               return {
                 "language": "en",

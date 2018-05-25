@@ -4,7 +4,8 @@
 
 console.log('setting up listener');
 browser.runtime.onMessage.addListener(request => {
-  var commentNodes = $('.comment-body:visible').not('.p-0');
+  var commentNodes = $('.comment-body:visible').not('.p-0'); // github
+  commentNodes.push($('.comment-content')); // bitbucket.org
 
   var commentTexts = commentNodes.map(function() {
     return $(this).text().trim();

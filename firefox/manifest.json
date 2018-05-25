@@ -24,7 +24,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.github.com/*/pull/*"
+        "*://*.github.com/*/pull/*",
+        "*://*.bitbucket.org/*/pull-requests/*"
       ],
       "js": [
         "jquery-3.3.1.min.js",
@@ -39,7 +40,8 @@
       "32": "favicon.ico"
     },
     "show_matches": [
-      "*://*.github.com/*/pull/*"
+      "*://*.github.com/*/pull/*",
+      "*://*.bitbucket.org/*/pull-requests/*"
     ]
   },
   "options_ui": {
