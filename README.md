@@ -38,4 +38,4 @@ You will need to enter the information the first time you click the icon.
 
 Notices
 -------
-Brian icon from "Brain by Arjun Adamson from the Noun Project"
+Brain icon from "Brain by Arjun Adamson from the Noun Project"
