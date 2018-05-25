@@ -6,7 +6,7 @@
   "version": "1.0",
   "homepage_url": "https://github.com/olore/something",
   "icons": {
-    "48": "favicon.ico"
+    "48": "brain.png"
   },
   "permissions": [
     "*://developer.mozilla.org/*",
@@ -36,8 +36,8 @@
   "page_action": {
     "default_title": "PRS-A - Pull Request Sentiment Analyzer",
     "default_icon": {
-      "16": "favicon.ico",
-      "32": "favicon.ico"
+      "16": "brain.png",
+      "32": "brain.png"
     },
     "show_matches": [
       "*://*.github.com/*/pull/*",
