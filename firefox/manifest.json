@@ -3,8 +3,8 @@
   "description": "Analyzes sentiment of comments on github pull requests",
   "manifest_version": 2,
   "name": "PRS-A - Pull Request Sentiment Analyzer",
-  "version": "1.0",
-  "homepage_url": "https://github.com/olore/something",
+  "version": "1.1",
+  "homepage_url": "https://github.com/olore/prs-a",
   "icons": {
     "48": "brain.png"
   },
