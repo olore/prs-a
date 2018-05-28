@@ -4,10 +4,13 @@
 
 console.log('setting up listener');
 browser.runtime.onMessage.addListener(request => {
+  var messageClass = 'prs-a-message';
   var commentNodes = $('.comment-body:visible').not('.p-0'); // github
   commentNodes.push($('.comment-content')); // bitbucket.org
 
-  var commentTexts = commentNodes.map(function () {
+  var unScoredComments = commentNodes.filter(function() { return $(this).has('div.' + messageClass).length == 0; });
+
+  var commentTexts = unScoredComments.map(function () {
     return $(this).text().trim();
   });
   commentTexts = $.makeArray(commentTexts);
@@ -24,6 +27,7 @@ browser.runtime.onMessage.addListener(request => {
       console.log(score, c);
 
       let message = document.createElement('div');
+      message.setAttribute('class', messageClass);
       message.innerText = `${(score * 100).toFixed(2)}% positive`;
 
       let thumb = document.createElement('div');
