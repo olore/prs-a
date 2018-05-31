@@ -1,0 +1,50 @@
+{
+
+  "description": "Analyzes sentiment of comments on github pull requests",
+  "manifest_version": 2,
+  "name": "PRS-A - Pull Request Sentiment Analyzer",
+  "version": "1.1",
+  "homepage_url": "https://github.com/olore/prs-a",
+  "icons": {
+    "48": "brain.png"
+  },
+  "permissions": [
+    "*://developer.mozilla.org/*",
+    "activeTab",
+    "declarativeContent",
+    "storage",
+    "tabs",
+    "webRequest"
+  ],
+  "background": {
+    "scripts": [
+      "jquery-3.3.1.min.js",
+      "background-worker.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.github.com/*/pull/*",
+        "*://*.bitbucket.org/*/pull-requests/*"
+      ],
+      "js": [
+        "jquery-3.3.1.min.js",
+        "content-script.js"
+      ]
+    }
+  ],
+  "page_action": {
+    "default_title": "PRS-A - Pull Request Sentiment Analyzer",
+    "default_icon": {
+      "16": "brain.png",
+      "32": "brain.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": false
+
+  }
+
+}
