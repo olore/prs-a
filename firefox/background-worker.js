@@ -53,22 +53,20 @@ class BackgroundWorker {
   }
 
   doPost(host, key, documents) {
-    return $.ajax({
-      type: "POST",
-      url: `https://${host}/text/analytics/v2.0/sentiment`,
-      data: JSON.stringify({ documents: documents }),
-      contentType: "application/json",
+    let url = `https://${host}/text/analytics/v2.0/sentiment`;
+    return fetch(url, {
+      method: "POST",
+      body: JSON.stringify({ documents: documents }),
       headers: {
         "Content-Type": "application/json",
         "Ocp-Apim-Subscription-Key": key
       }
     })
-    .done((foo) => {
-      console.log( "success", foo.documents );
-      return Promise.resolve(foo);
+    .then((foo) => {
+      return foo.json();
     })
-    .fail((err) => {
-      console.log( "error", err );
+    .catch((err) => {
+      console.log(`error calling ${url}`, err );
       return Promise.reject(err);
     })
   }
