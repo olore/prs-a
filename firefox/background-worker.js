@@ -2,16 +2,18 @@
 
 console.log('hello from bg');
 
-var API_HOST;
-var API_KEY;
+browser.pageAction.onClicked.addListener(() => {
+  let bw = new BackgroundWorker();
+  bw.handleButtonClick();
+});
 
-class Plugin {
+class BackgroundWorker {
 
   constructor() {
     console.log('plugin constructor');
   }
 
-  doWork() {
+  handleButtonClick() {
     this.getKeys()
       .then((keys) => {
         let { API_HOST, API_KEY } = keys;
@@ -80,17 +82,12 @@ class Plugin {
     return browser.tabs.query({
       currentWindow: true,
       active: true
-    }).then((tabs) => {
+    })
+    .then((tabs) => {
       return browser.tabs.sendMessage(
         tabs[0].id,
         msg);
-    }).catch((err) => console.error('TAB ERR', err))
+    });
   } 
 
 };
-
-
-browser.pageAction.onClicked.addListener(() => {
-  let p = new Plugin();
-  p.doWork();
-});
