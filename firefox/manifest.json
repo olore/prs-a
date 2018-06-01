@@ -28,7 +28,6 @@
         "*://*.bitbucket.org/*/pull-requests/*"
       ],
       "js": [
-        "jquery-3.3.1.min.js",
         "content-script.js"
       ]
     }

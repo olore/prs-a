@@ -17,14 +17,14 @@ class BackgroundWorker {
     this.getKeys()
       .then((keys) => {
         let { API_HOST, API_KEY } = keys;
+
         if (!API_HOST || !API_KEY || API_HOST === '' || API_KEY === '') {
           console.log('Opening options pages due to missing API_KEY or API_HOST');
           return browser.runtime.openOptionsPage();
         }
 
         console.log('going off to do work...');
-        console.log(1, API_HOST);
-        console.log(2, API_KEY);
+        console.log(1, API_HOST, API_KEY);
 
         this.sendMessageToCurrentTab({start: 1})
           .then((resp) => {
@@ -36,10 +36,15 @@ class BackgroundWorker {
                 "text": comment
               };
             });
-            this.doPost(API_HOST, API_KEY, documents)
-              .then((data) => {
-                this.sendMessageToCurrentTab({done: data.documents});
-              });
+            return documents;
+          })
+          .then((documents) => {
+            if (documents.length > 0) {
+              this.doPost(API_HOST, API_KEY, documents)
+                .then((data) => {
+                  this.sendMessageToCurrentTab({done: data.documents});
+                });
+            }
           })
           .catch((resp) => {
             console.log("UH OH", resp);

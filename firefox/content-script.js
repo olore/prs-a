@@ -14,40 +14,39 @@ class ContentScriptHandler {
   }
 
   handleIncomingMessage(request) {
-    var commentNodes = $('.comment-body:visible').not('.p-0'); // github
-    commentNodes.push($('.comment-content')); // bitbucket.org
+    let commentNodes = Array.from(document.querySelectorAll('.comment-body:not(.p-0):not(.js-preview-body)')); // github
+    let bitBucketCommentNodes = document.querySelectorAll('.comment-content'); // bitbucket.org
 
-    var commentTexts = this.getCommentsFromPage(commentNodes);
+    if (bitBucketCommentNodes.length > 0) {
+      commentNodes = Array.from(bitBucketCommentNodes);
+    }
+    let commentTexts = this.getCommentsFromPage(commentNodes);
 
     if (request.start === 1) {
+      // send array of comment strings to background script
       return Promise.resolve({response: commentTexts});
     } else {
+      // receive array of comment strings & scores from background script
       console.log('Received message from the background script', request.done);
       commentTexts.forEach((c, i) => {
         let score = request.done[i].score,
-          commentNode = $(commentNodes[i]),
+          commentNode = commentNodes[i],
           html = this.generateHtmlNode(score);
 
-          commentNode[0].appendChild(html);
+          commentNode.appendChild(html);
         });
         return Promise.resolve({response: 'Hi from content script - I\'m all done!'});
     }
   }
 
   getCommentsFromPage(commentNodes) {
-    // jQuery .filter https://api.jquery.com/filter/
-    var that = this; // damnit jQuery!
-    var unScoredComments = commentNodes.filter(function() {
-      return $(this).has('div.' + that.MESSAGE_CLASS).length == 0;
+    let unScoredComments = commentNodes.filter(comment => {
+      return comment.querySelectorAll('div.' + this.MESSAGE_CLASS).length === 0;
     });
-
-    // jQuery .map https://api.jquery.com/map/
-    var commentTexts = unScoredComments.map(function () {
-      return $(this).text().trim();
+    
+    let commentTexts = unScoredComments.map(comment => {
+      return comment.innerText.trim();
     });
-
-    // jQuery https://api.jquery.com/jQuery.makeArray/
-    commentTexts = $.makeArray(commentTexts);
 
     return commentTexts;
   }
