@@ -1,42 +1,68 @@
 // content script - can interact with page
 
-//document.body.style.border = "5px solid red";
-
 console.log('setting up listener');
+
 browser.runtime.onMessage.addListener(request => {
-  var messageClass = 'prs-a-message';
-  var commentNodes = $('.comment-body:visible').not('.p-0'); // github
-  commentNodes.push($('.comment-content')); // bitbucket.org
-
-  var unScoredComments = commentNodes.filter(function() { return $(this).has('div.' + messageClass).length == 0; });
-
-  var commentTexts = unScoredComments.map(function () {
-    return $(this).text().trim();
-  });
-  commentTexts = $.makeArray(commentTexts);
-
-  if (request.start === 1) {
-    return Promise.resolve({response: commentTexts});
-  } else {
-    console.log('Message from the background script:');
-    console.log('1 is positive, 0 is negative');
-    commentTexts.forEach((c, i) => {
-      let score = request.done[i].score,
-        commentNode = $(commentNodes[i]);
-
-      console.log(score, c);
-
-      let message = document.createElement('div');
-      message.setAttribute('class', messageClass);
-      message.innerText = `${(score * 100).toFixed(2)}% positive`;
-
-      let thumb = document.createElement('div');
-      thumb.innerText = '👍';
-      thumb.style = `transform: rotate(${180 * (1 - score)}deg); width: 25px; height: 25px; padding: 2px; float: left`;
-
-      commentNode[0].appendChild(thumb);
-      commentNode[0].appendChild(message);
-    });
-    return Promise.resolve({response: 'Hi from content script - I\'m all done!'});
-  }
+  let csh = new ContentScriptHandler();
+  return csh.handleIncomingMessage(request);
 });
+
+class ContentScriptHandler {
+
+  constructor() {
+    this.MESSAGE_CLASS = 'prs-a-message';
+  }
+
+  handleIncomingMessage(request) {
+    let commentNodes = Array.from(document.querySelectorAll('.comment-body:not(.p-0):not(.js-preview-body)')); // github
+    let bitBucketCommentNodes = document.querySelectorAll('.comment-content'); // bitbucket.org
+
+    if (bitBucketCommentNodes.length > 0) {
+      commentNodes = Array.from(bitBucketCommentNodes);
+    }
+    let commentTexts = this.getCommentsFromPage(commentNodes);
+
+    if (request.start === 1) {
+      // return array of comment strings to background script
+      return Promise.resolve({response: commentTexts});
+    } else {
+      // receive array of comment strings & scores from background script
+      console.log('Received message from the background script', request.done);
+      commentTexts.forEach((c, i) => {
+        let score = request.done[i].score,
+          commentNode = commentNodes[i],
+          html = this.generateHtmlNode(score);
+
+          commentNode.appendChild(html);
+        });
+        return Promise.resolve({response: 'Hi from content script - I\'m all done!'});
+    }
+  }
+
+  getCommentsFromPage(commentNodes) {
+    let unScoredComments = commentNodes.filter(comment => {
+      return comment.querySelectorAll('div.' + this.MESSAGE_CLASS).length === 0;
+    });
+    
+    let commentTexts = unScoredComments.map(comment => {
+      return comment.innerText.trim();
+    });
+
+    return commentTexts;
+  }
+
+  generateHtmlNode(score) {
+    let html = `
+      <div class="${this.MESSAGE_CLASS}">
+        <span style="transform: rotate(${180 * (1 - score)}deg); width: 25px; height: 25px; padding: 2px; float: left">
+          👍
+        </span>
+        ${(score * 100).toFixed(2)}% positive
+      </div>
+    `;
+
+    let div = document.createElement('div');
+    div.innerHTML = html;
+    return div;
+  }
+}
