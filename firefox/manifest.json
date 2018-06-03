@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "name": "PRS-A - Pull Request Sentiment Analyzer",
   "version": "1.0",
-  "homepage_url": "https://github.com/olore/something",
+  "homepage_url": "https://github.com/olore/prs-a",
   "icons": {
     "48": "brain.png"
   },
