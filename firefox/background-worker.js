@@ -72,6 +72,7 @@ class BackgroundWorker {
   }
 
   getKeys() {
+    // TODO: does .get take array of keys like Chrome?
     return browser.storage.local.get()
       .then((storedSettings) => {
         return {
