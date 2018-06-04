@@ -37,7 +37,8 @@ class BackgroundWorker {
               };
             });
             return documents;
-          }).then((documents) => {
+          })
+          .then((documents) => {
             if (documents.length > 0) {
               this.doPost(API_HOST, API_KEY, documents)
                 .then((data) => {
@@ -92,6 +93,9 @@ class BackgroundWorker {
           tabs[0].id,
           msg,
           (response) => {
+            if (!response) {
+              console.log('ERR:', chrome.runtime.lastError);
+            }
             resolve(response);
           });
       });
@@ -102,16 +106,16 @@ class BackgroundWorker {
 
 
 // In Chrome, the page action button display logic happens here instead of manifest.json
-var matchingrRule = {
+var matchingRule = {
   conditions: [
     new chrome.declarativeContent.PageStateMatcher({
       pageUrl: { 
-        urlMatches: '.*\.github.com\/.*?\/pull\/.*' 
+        urlMatches: '.*\/pull\/.*'
       },
     }),
     new chrome.declarativeContent.PageStateMatcher({
       pageUrl: { 
-        urlMatches: '.*\.bitbucket.org\/.*?/pull-requests\/.*'
+        urlMatches: '.*\/pull-requests\/.*'
       },
     })
   ],

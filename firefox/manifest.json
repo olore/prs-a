@@ -23,8 +23,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.github.com/*/pull/*",
-        "*://*.bitbucket.org/*/pull-requests/*"
+        "*://*/*/pull/*",
+        "*://*/*/pull-requests/*"
       ],
       "js": [
         "content-script.js"
@@ -38,8 +38,8 @@
       "32": "brain.png"
     },
     "show_matches": [
-      "*://*.github.com/*/pull/*",
-      "*://*.bitbucket.org/*/pull-requests/*"
+      "*://*/*/pull/*",
+      "*://*/*/pull-requests/*"
     ]
   },
   "options_ui": {

@@ -4,7 +4,12 @@ console.log('setting up listener');
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   let csh = new ContentScriptHandler();
-  return csh.handleIncomingMessage(request, sendResponse);
+  csh.handleIncomingMessage(request)
+    .then((resp) => {
+      console.log('sending response', resp);
+      sendResponse(resp);
+    });
+  return true;
 });
 
 class ContentScriptHandler {
@@ -13,7 +18,7 @@ class ContentScriptHandler {
     this.MESSAGE_CLASS = 'prs-a-message';
   }
   
-  handleIncomingMessage(request, sendResponse) {
+  handleIncomingMessage(request) {
     let commentNodes = Array.from(document.querySelectorAll('.comment-body:not(.p-0):not(.js-preview-body)')); // github
     let bitBucketCommentNodes = document.querySelectorAll('.comment-content'); // bitbucket.org
 
@@ -24,20 +29,19 @@ class ContentScriptHandler {
 
     if (request.start === 1) {
       // return array of comment strings to background script
-      sendResponse({response: commentTexts});
+      return Promise.resolve({response: commentTexts});
     } else {
       // receive array of comment strings & scores from background script
       console.log('Received message from the background script', request.done);
       commentTexts.forEach((c, i) => {
-        let score = message.done[i].score,
-          commentNode = $(commentNodes[i]);
+        let score = request.done[i].score,
+          commentNode = commentNodes[i],
           html = this.generateHtmlNode(score);
 
           commentNode.appendChild(html);
       });
-      sendResponse({response: 'Hi from content script - I\'m all done!'});
+      return Promise.resolve({response: 'Hi from content script - I\'m all done!'});
     }
-    return true;
   }
 
   getCommentsFromPage(commentNodes) {
@@ -66,4 +70,4 @@ class ContentScriptHandler {
     div.innerHTML = html;
     return div;
   }
-};
+}
