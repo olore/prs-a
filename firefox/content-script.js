@@ -16,9 +16,13 @@ class ContentScriptHandler {
   handleIncomingMessage(request) {
     let commentNodes = Array.from(document.querySelectorAll('.comment-body:not(.p-0):not(.js-preview-body)')); // github
     let bitBucketCommentNodes = document.querySelectorAll('.comment-content'); // bitbucket.org
+    let hostedBitBucketCommentNodes = document.querySelectorAll('.message.markup'); // hosted bitbucket
 
     if (bitBucketCommentNodes.length > 0) {
       commentNodes = Array.from(bitBucketCommentNodes);
+    }
+    if (hostedBitBucketCommentNodes.length > 0) {
+      commentNodes = Array.from(hostedBitBucketCommentNodes);
     }
     let commentTexts = this.getCommentsFromPage(commentNodes);
 
