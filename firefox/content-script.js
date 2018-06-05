@@ -58,7 +58,7 @@ class ContentScriptHandler {
   generateHtmlNode(score) {
     let html = `
       <div class="${this.MESSAGE_CLASS}">
-        <span style="transform: rotate(${180 * (1 - score)}deg); width: 25px; height: 25px; padding: 2px; float: left">
+        <span style="transform: rotate(${180 * (1 - score)}deg); width: 25px; height: 25px; padding: 2px;">
           👍
         </span>
         ${(score * 100).toFixed(2)}% positive
