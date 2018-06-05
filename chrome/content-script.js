@@ -2,9 +2,14 @@
 
 console.log('setting up listener');
 
-browser.runtime.onMessage.addListener(request => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   let csh = new ContentScriptHandler();
-  return csh.handleIncomingMessage(request);
+  csh.handleIncomingMessage(request)
+    .then((resp) => {
+      console.log('sending response', resp);
+      sendResponse(resp);
+    });
+  return true;
 });
 
 class ContentScriptHandler {
@@ -21,9 +26,11 @@ class ContentScriptHandler {
     if (bitBucketCommentNodes.length > 0) {
       commentNodes = Array.from(bitBucketCommentNodes);
     }
+
     if (hostedBitBucketCommentNodes.length > 0) {
       commentNodes = Array.from(hostedBitBucketCommentNodes);
     }
+
     let commentTexts = this.getCommentsFromPage(commentNodes);
 
     if (request.start === 1) {
@@ -38,8 +45,8 @@ class ContentScriptHandler {
           html = this.generateHtmlNode(score);
 
           commentNode.appendChild(html);
-        });
-        return Promise.resolve({response: 'Hi from content script - I\'m all done!'});
+      });
+      return Promise.resolve({response: 'Hi from content script - I\'m all done!'});
     }
   }
 

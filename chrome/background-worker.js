@@ -2,7 +2,7 @@
 
 console.log('hello from bg');
 
-browser.pageAction.onClicked.addListener(() => {
+chrome.pageAction.onClicked.addListener(() => {
   let bw = new BackgroundWorker();
   bw.handleButtonClick();
 });
@@ -20,7 +20,7 @@ class BackgroundWorker {
 
         if (!API_HOST || !API_KEY || API_HOST === '' || API_KEY === '') {
           console.log('Opening options pages due to missing API_KEY or API_HOST');
-          return browser.runtime.openOptionsPage();
+          return chrome.runtime.openOptionsPage();
         }
 
         console.log('going off to do work...');
@@ -71,27 +71,59 @@ class BackgroundWorker {
     })
   }
 
+  // TODO: can we promisify .get() so this code can be same as Firefox?
   getKeys() {
-    // TODO: does .get take array of keys like Chrome?
-    return browser.storage.local.get()
-      .then((storedSettings) => {
-        return {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.get(['host', 'key'], (storedSettings) => {
+        resolve({
           API_HOST: storedSettings.host,
           API_KEY: storedSettings.key
-        };
+        });
       });
+    });
   }
 
   sendMessageToCurrentTab(msg) {
-    return browser.tabs.query({
-      currentWindow: true,
-      active: true
-    })
-    .then((tabs) => {
-      return browser.tabs.sendMessage(
-        tabs[0].id,
-        msg);
+    return new Promise((resolve) => {
+      chrome.tabs.query({
+        currentWindow: true,
+        active: true
+      }, (tabs) => {
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          msg,
+          (response) => {
+            if (!response) {
+              console.log('ERR:', chrome.runtime.lastError);
+            }
+            resolve(response);
+          });
+      });
     });
   } 
 
 };
+
+
+// In Chrome, the page action button display logic happens here instead of manifest.json
+var matchingRule = {
+  conditions: [
+    new chrome.declarativeContent.PageStateMatcher({
+      pageUrl: { 
+        urlMatches: '.*\/pull\/.*'
+      },
+    }),
+    new chrome.declarativeContent.PageStateMatcher({
+      pageUrl: { 
+        urlMatches: '.*\/pull-requests\/.*'
+      },
+    })
+  ],
+  actions: [ new chrome.declarativeContent.ShowPageAction() ]
+};
+
+chrome.runtime.onInstalled.addListener((details) => {
+  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+    chrome.declarativeContent.onPageChanged.addRules([matchingRule]);
+  });
+});

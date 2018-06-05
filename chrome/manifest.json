@@ -11,6 +11,7 @@
   "permissions": [
     "*://developer.mozilla.org/*",
     "activeTab",
+    "declarativeContent",
     "storage",
     "tabs",
     "webRequest"
@@ -36,15 +37,12 @@
     "default_icon": {
       "16": "brain.png",
       "32": "brain.png"
-    },
-    "show_matches": [
-      "*://*/*/pull/*",
-      "*://*/*/pull-requests/*"
-    ]
+    }
   },
   "options_ui": {
     "page": "options/options.html",
-    "browser_style": true
+    "open_in_tab": false
+
   }
 
 }
