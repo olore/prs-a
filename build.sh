@@ -1,5 +1,5 @@
 echo "DON'T FORGET TO BUMP THE manfest.json FILES"
-cd firefox && zip prs-a.zip *
+cd firefox && zip -r prs-a.zip *
 cd -
-cd chrome && zip prs-a.zip *
+cd chrome && zip -r prs-a.zip *
 cd -
