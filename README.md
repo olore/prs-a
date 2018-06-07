@@ -8,6 +8,8 @@ PRS-A - Pull Request Sentiment Analyzer
 </a>
 
 <a href="https://addons.mozilla.org/en-US/firefox/addon/pr-sentiment-analyzer">Add to Firefox</a>
+|
+<a href="">Add to Chrome</a>
 
 When viewing a pull request, simply click the brain icon in the URL bar
 ------------------------------------------------------------------------
