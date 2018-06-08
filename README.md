@@ -2,10 +2,7 @@ PRS-A - Pull Request Sentiment Analyzer
 =======================================
 *(pronounced "PRESS A")*
 
-<a href="https://addons.mozilla.org/en-US/firefox/addon/pr-sentiment-analyzer/">
-    <img src="screenshots/firefox.png"
-    alt="Use this Add-on to analyize the comments made on pull requests on both github.com and bitbucket.org">
-</a>
+An browser extension to analyize the comments made on pull requests on both github.com and bitbucket.org
 
 <a href="https://addons.mozilla.org/en-US/firefox/addon/pr-sentiment-analyzer">Add to Firefox</a>
 |
@@ -30,12 +27,11 @@ Click the link, choose <b>Get API Key</b> and follow the steps.
 
 Once you finish, you will end up with something that looks like the following:
 
-<img src="firefox/options/key-example.png" />
+<a href="https://azure.microsoft.com/en-us/try/cognitive-services/?api=text-analytics">
+    <img src="firefox/options/key-example.png" />
+</a>
 
 You will need to enter the information the first time you click the icon.
-
-
-
 
 
 Notices
